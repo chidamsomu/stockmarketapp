@@ -5,20 +5,20 @@
     </div>
 <% end %>
 
-<br/>
-<br/>
+<br>
+<br>
 
 <% if @stock_companyinfo || @stock_delayedquote %>
     <strong>Symbol: </strong><%= @stock_companyinfo['symbol'] %>
-    <br/>
+    <br>
     <strong>Company Name: </strong><%= @stock_companyinfo['companyName'] %>
-    </br>
+    <br>
     <strong>Current Price: </strong><%= @stock_delayedquote['latestPrice'] %>
-    <br/>
+    <br>
     <strong>Sector: </strong><%= @stock_companyinfo['sector'] %>
-    </br>
+    <br>
     <strong>Website: </strong><%= @stock_companyinfo['website'] %>
-    </br>
+    <br>
     <strong>RSI: </strong><%= @rsi14 %>
      
 <%elsif @nothing %>
