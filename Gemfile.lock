@@ -94,7 +94,7 @@ GEM
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
     orm_adapter (0.5.0)
-    pg (1.0.0)
+    pg (0.21.0)
     rack (1.6.8)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -197,7 +197,7 @@ DEPENDENCIES
   devise (~> 4.4, >= 4.4.3)
   jbuilder (~> 2.0)
   jquery-rails
-  pg (~> 1.0)
+  pg (~> 0.21.0)
   rails (= 4.2.5)
   rails_12factor (~> 0.0.3)
   sass-rails (~> 5.0)
