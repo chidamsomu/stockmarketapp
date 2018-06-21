@@ -1,0 +1,61 @@
+<h1>My Stocks</h1>
+</br>
+<table class="table table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>Company Name</th>
+      <th>Ticker</th>
+      <th>Current Price</th>
+      <th>Sector</th>
+      <th colspan = "1">Change</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @stocks.each do |stock| %>
+      <% if stock.user_id == current_user.id %>
+        <% begin %>
+          <% @url_delayedquote = 'https://api.iextrading.com/1.0/stock/' + stock.ticker + '/delayed-quote' %>
+          <% @uri_delayedquote = URI(@url_delayedquote) %>
+          <% @response_delayedquote = Net::HTTP.get(@uri_delayedquote) %>
+          <% @stock_delayedquote = JSON.parse(@response_delayedquote) %>
+          
+          <% @url_companyinfo = 'https://api.iextrading.com/1.0/stock/' + stock.ticker + '/company' %>
+          <% @uri_companyinfo = URI(@url_companyinfo) %>
+          <% @response_companyinfo = Net::HTTP.get(@uri_companyinfo) %>
+          <% @stock_companyinfo = JSON.parse(@response_companyinfo) %>
+          
+          <% @url_3mchart = 'https://api.iextrading.com/1.0/stock/' + stock.ticker + '/chart/3m' %>
+          <% @uri_3mchart = URI(@url_3mchart) %>
+          <% @response_3mchart = Net::HTTP.get(@uri_3mchart) %>
+          <% @stock_3mchart = JSON.parse(@response_3mchart) %>
+          
+          <% @pricechange = @stock_delayedquote['delayedPrice'] - @stock_3mchart[-1]['close'] %>
+          
+          <% rescue StandardError %>
+          <tr>
+          <td><%= 'N/A' %></td>
+          <td class="text-uppercase"><%= stock.ticker %></td>
+          <td><%= 'N/A' %></td>
+          <td><%= 'N/A' %></td>
+          </tr>
+          <% next %>
+        <% end %>
+        
+        <tr>
+          <td><%= link_to @stock_companyinfo['companyName'], stock %></td>
+          <td class="text-uppercase"><%= stock.ticker %></td>
+          <td><%= @stock_delayedquote['delayedPrice'] %></td>
+          <td><%= @stock_companyinfo['sector'] %></td>
+          <% if @pricechange < 0 %>
+            <td><center><span class="label label-danger"><%= @pricechange.round(3) %></span></center></td>
+          <% else %>
+            <td><center><span class="label label-success"><%= @pricechange.round(3) %></span></center></td>
+          <% end %>
+        </tr>
+      <% end %> 
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'New Stock', new_stock_path, class: 'btn btn-primary' %>

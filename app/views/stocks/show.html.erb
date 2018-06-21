@@ -1,0 +1,45 @@
+<% begin %>
+  <% @url_delayedquote = 'https://api.iextrading.com/1.0/stock/' + @stock.ticker + '/delayed-quote' %>
+  <% @uri_delayedquote = URI(@url_delayedquote) %>
+  <% @response_delayedquote = Net::HTTP.get(@uri_delayedquote) %>
+  <% @stock_delayedquote = JSON.parse(@response_delayedquote) %>
+  
+  <% @url_companyinfo = 'https://api.iextrading.com/1.0/stock/' + @stock.ticker + '/company' %>
+  <% @uri_companyinfo = URI(@url_companyinfo) %>
+  <% @response_companyinfo = Net::HTTP.get(@uri_companyinfo) %>
+  <% @stock_companyinfo = JSON.parse(@response_companyinfo) %>
+  
+<% rescue StandardError %>
+  
+<% end %>
+
+<% if @stock_companyinfo || @stock_delayedquote %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><strong><%= @stock_companyinfo['companyName'] %></strong></h3>
+  </div>
+  <div class="panel-body">
+    <div class="col-md-4">
+      <h1><%= @stock_delayedquote['delayedPrice'] %></h1>
+      <strong>Symbol: </strong><span class="text-uppercase"><%= @stock.ticker %></span>
+      <br/>
+      <strong>Industry: </strong><%= @stock_companyinfo['industry'] %>
+      </br>
+      <strong>Sector: </strong><%= @stock_companyinfo['sector'] %>
+      </br>
+      <strong>Website: </strong><%= @stock_companyinfo['website'] %>
+      </br>
+    </div>
+    <div class="col-md-8">
+      </br>
+      <p align='justify'><%= @stock_companyinfo['description'] %></p>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <% link_to 'Edit', edit_stock_path(@stock)%> 
+    <%= link_to 'Back', stocks_path %> |
+    <%= link_to 'Delete', stock_path(@stock), method: :delete, data: { confirm: 'Are you sure?' }%>
+  </div>
+</div>
+<% end %>
+
