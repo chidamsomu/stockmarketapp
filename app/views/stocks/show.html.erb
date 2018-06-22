@@ -9,6 +9,11 @@
   <% @response_companyinfo = Net::HTTP.get(@uri_companyinfo) %>
   <% @stock_companyinfo = JSON.parse(@response_companyinfo) %>
   
+  <% @url_news = 'https://api.iextrading.com/1.0/stock/' + @stock.ticker + '/news/last/50' %>
+  <% @uri_news = URI(@url_news) %>
+  <% @response_news = Net::HTTP.get(@uri_news) %>
+  <% @stock_news = JSON.parse(@response_news) %>
+  
 <% rescue StandardError %>
   
 <% end %>
@@ -42,4 +47,25 @@
   </div>
 </div>
 <% end %>
+
+<h3>News</h3>
+
+<% @i = 0 %>
+
+
+    <div class="row" style="display: flex; flex-wrap: wrap;">
+      <% for @stock_new in @stock_news do %>
+        <div class="col-lg-3 col-md-4 col-sm-12">
+          <div class="thumbnail">
+            <%= link_to image_tag(@stock_news[@i]['image']), @stock_news[@i]['url'], target: :_blank  %>
+            <div class="caption">
+              <h4><%= @stock_news[@i]['source'] %></h4>
+              <p><%= @stock_news[@i]['headline'] %></p>
+              <% @i = @i + 1 %>
+            </div>
+          </div>
+        </div>
+      <% end %> 
+    </div>
+
 
